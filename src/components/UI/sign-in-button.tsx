@@ -2,10 +2,23 @@
 
 import { Button } from "antd";
 import { signIn } from "next-auth/react";
+import { useState } from "react";
 
-const SignInButton = () => {
+interface Props {
+    className?: string
+}
+
+const SignInButton: React.FC<Props> = ({ className }: Props) => {
+    const [isLoading, setIsLoading] = useState(false);
     return (
-        <Button size="large" type="primary" onClick={() => signIn("keycloak", {redirect: true, callbackUrl: "/"})}>Sign In!</Button>
+        <Button
+            className={`${className}`}
+            type="primary"
+            onClick={() => {
+                signIn("keycloak", { redirect: true, callbackUrl: "/" });
+                setIsLoading(true);
+            }}
+            loading={isLoading}>Sign In!</Button>
     );
 }
 

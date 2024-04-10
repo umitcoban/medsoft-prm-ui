@@ -1,7 +1,7 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
-export const authOptions: AuthOptions =({
+export const authOptions: AuthOptions = ({
     providers: [
         KeycloakProvider({
             clientId: process.env.KEYCLOAK_CLIENT_ID || "",
@@ -21,6 +21,13 @@ export const authOptions: AuthOptions =({
             return session;
         }
     },
+    session: {
+        strategy: "jwt",
+        maxAge: 3 * 60
+    },
+    jwt: {
+        maxAge: 3 * 60
+    }
 })
 
 const handler = NextAuth(authOptions);
