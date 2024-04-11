@@ -1,3 +1,4 @@
+"use client"
 import Account from "@/api/entities/account.entity";
 import CardCalendar from "@/components/UI/cardCalendar";
 import CardTable from "@/components/UI/cardTable";

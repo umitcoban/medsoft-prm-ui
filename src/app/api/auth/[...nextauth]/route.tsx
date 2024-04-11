@@ -1,3 +1,4 @@
+import { decode } from 'jsonwebtoken';
 import NextAuth, { AuthOptions } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
@@ -11,13 +12,24 @@ export const authOptions: AuthOptions = ({
     ],
     callbacks: {
         async jwt({ token, account }) {
-            if (account) {
-                token.accessToken = account.access_token;
+            try {
+                if (account) {
+                    const accessToken = account.access_token;
+                    token.accessToken = accessToken;
+                    const decoded = decode(String(accessToken));
+                    if (typeof decoded === 'object' && decoded !== null && 'realm_access' in decoded && decoded.realm_access.roles) {
+                        token.roles = decoded.realm_access.roles;
+                        console.log(decoded);
+                    }
+                }
+            } catch (error) {
+                console.log("decoded error: ", error)
             }
             return token;
         },
         async session({ session, token }) {
             session.accessToken = String(token.accessToken) || "";
+            session.roles = token.roles || [];
             return session;
         }
     },

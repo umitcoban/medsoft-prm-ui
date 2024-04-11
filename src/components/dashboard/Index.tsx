@@ -1,5 +1,3 @@
-"use client"
-
 import Account from "@/api/entities/account.entity";
 import UserDashBoard from "./user-dashboard/userDashBoard";
 
@@ -8,9 +6,14 @@ interface Props {
     account: Account | null;
 }
 
-const Index: React.FC<Props> = ({ account }) => {
+const Index: React.FC<Props> = async ({ account }) => {
+    
     return (
-        <UserDashBoard account={account} />
+        <section>
+            <p>NAME: {account ? account.firstName : ""}</p>
+            <p>ROLES: {account ? account.roles.map(val => val.role) : ""}</p>
+            <UserDashBoard account={account} />
+        </section>
     )
 }
 

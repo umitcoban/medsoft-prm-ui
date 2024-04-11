@@ -10,7 +10,7 @@ export default interface Account {
     age: number;
     weight: number;
     height: number;
-    roles: Set<Role>
+    roles: Role[];
     createdAt: Date;
     updatedAt: Date;
 }
