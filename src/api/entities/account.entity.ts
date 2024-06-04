@@ -11,6 +11,7 @@ export default interface Account {
     weight: number;
     height: number;
     roles: Role[];
+    photo: string;
     createdAt: Date;
     updatedAt: Date;
 }

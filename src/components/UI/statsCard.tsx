@@ -3,7 +3,7 @@ import { Card, Statistic } from "antd";
 interface Props{
     cardTitle: string;
     statsTitle: string;
-    value: string;
+    value: any;
     prefix?: string;
     suffix?: string;
 }

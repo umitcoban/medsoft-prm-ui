@@ -1,12 +1,13 @@
 "use client"
 
+import axiosInstance from "@/api/axiostInstance";
 import Account from "@/api/entities/account.entity";
-import { PlusOutlined } from "@ant-design/icons";
-import { App, Button, DatePicker, Divider, Form, Input, InputNumber, Upload } from "antd";
-import { FaSave } from "react-icons/fa";
-
 import { updateAccountWithToken } from "@/api/services/account.service";
+import { PlusOutlined } from "@ant-design/icons";
+import { App, Button, DatePicker, Divider, Form, Image, Input, InputNumber, Modal, Upload, UploadFile } from "antd";
 import dayjs from "dayjs";
+import { useState } from "react";
+import { FaSave } from "react-icons/fa";
 
 interface Props {
     account: Account | null;
@@ -15,6 +16,17 @@ interface Props {
 const MyDetails: React.FC<Props> = ({ account }) => {
     const [form] = Form.useForm();
     const { notification } = App.useApp();
+    const [previewVisible, setPreviewVisible] = useState(false);
+    const [previewImage, setPreviewImage] = useState('');
+    const [fileList, setFileList] = useState<UploadFile[]>(
+        account?.photo ? [
+            {
+                name: account.firstName,
+                uid: account.id,
+                fileName: account.firstName,
+                url: "data:image/png;base64," + account.photo
+            }] : []);
+
     const onSubmitForm = async () => {
         const data: Partial<Account> = {
             birthDate: form.getFieldValue("birthDate"),
@@ -33,6 +45,44 @@ const MyDetails: React.FC<Props> = ({ account }) => {
             notification.error({ message: "Account settings update error!", closable: true, placement: "top" });
         }
     }
+
+    const handleFileUpload = async (file: any) => {
+        try {
+            // if (!account) {
+            //     notification.error({ message: "Photo upload error!", closable: true, placement: "top" });
+            //     return;
+            // }
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("userId", account?.id ? account.id : "");
+            const response = await axiosInstance.post("/documents/api/photos/profile", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+            notification.success({ message: "Photo uploaded successfully!", closable: true, placement: "top" });
+
+            setFileList([
+                {
+                    uid: file.uid,
+                    name: file.name,
+                    status: 'done',
+                    url: "data:image/png;base64," + response.data.data,
+                },
+            ]);
+        } catch (error) {
+            notification.error({ message: "Photo upload error!", closable: true, placement: "top" });
+            console.error("Error uploading photo:", error);
+            return false;
+        }
+    };
+
+    const handlePreview = async (file: UploadFile) => {
+        setPreviewImage(file.url || (file.thumbUrl as string));
+        setPreviewVisible(true);
+    };
+
+    const handleCancel = () => setPreviewVisible(false);
 
     return (
         <section className="!space-y-12">
@@ -96,12 +146,24 @@ const MyDetails: React.FC<Props> = ({ account }) => {
                         <div className="grid-flow-col">
                             <div className="grid grid-cols-1 gap-2">
                                 <div className="grid-flow-row">
-                                    <Upload action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload" listType="picture-circle">
-                                        <button style={{ border: 0, background: 'none' }} type="button">
-                                            <PlusOutlined />
-                                            <div style={{ marginTop: 8 }}>Upload</div>
-                                        </button>
+                                    <Upload
+                                        listType="picture-circle"
+                                        multiple={false}
+                                        maxCount={1}
+                                        accept=".png,.jpeg,.jpg"
+                                        onPreview={handlePreview}
+                                        fileList={fileList}
+                                        customRequest={({ file }) => handleFileUpload(file)}>
+                                        {fileList.length >= 1 ? null : (
+                                            <button style={{ border: 0, background: 'none' }} type="button">
+                                                <PlusOutlined />
+                                                <div style={{ marginTop: 8 }}>Upload</div>
+                                            </button>
+                                        )}
                                     </Upload>
+                                    <Modal open={previewVisible} footer={null} onCancel={handleCancel}>
+                                        <Image alt="example" style={{ width: '100%' }} src={previewImage} />
+                                    </Modal>
                                 </div>
                             </div>
                         </div>
@@ -121,6 +183,7 @@ const MyDetails: React.FC<Props> = ({ account }) => {
                                     </Form.Item>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </section>
@@ -139,7 +202,7 @@ const MyDetails: React.FC<Props> = ({ account }) => {
                                 </div>
                                 <div className="grid-flow-row">
                                     <Form.Item label="Height" name="height" initialValue={account?.height || ""} rules={[{ required: true, message: "Height must be valid", type: "number", min: 0 }]}>
-                                        <InputNumber className="!w-full"  title="Height" name="height" size="large"/>
+                                        <InputNumber className="!w-full" title="Height" name="height" size="large" />
                                     </Form.Item>
                                 </div>
                             </div>

@@ -22,6 +22,16 @@ export const getAccountsWithToken = async (): Promise<Account[] | null> => {
     }
 }
 
+export const getAccountsAdminAccountAnalyticsCounts = async (): Promise<AccountAnalytic | null> => {
+    try {
+        const response = await axiosInstance.get("/accounts/api/analytics/counts");
+        return response.data.data;
+    } catch (error) {
+        console.log("getAccountWithToken error");
+        return null;
+    }
+}
+
 export const updateAccountWithToken = async (account: Partial<Account>): Promise<Account | null> => {
     try {
         const response = await axiosInstance.put("/accounts/api", { ...account });
