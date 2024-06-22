@@ -9,8 +9,8 @@ interface AccountsCount {
 };
 
 interface AccountsCountWithDate {
-    date?: Date,
-    count?: number
+    second?: Date,
+    first?: number
 };
 
 

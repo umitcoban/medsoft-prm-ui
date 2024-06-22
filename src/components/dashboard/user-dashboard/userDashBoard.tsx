@@ -2,6 +2,7 @@
 import Account from "@/api/entities/account.entity";
 import CardCalendar from "@/components/UI/cardCalendar";
 import CardTable from "@/components/UI/cardTable";
+import ProfileInfoCard from "@/components/UI/ProfileInfoCard";
 import StatsCard from "@/components/UI/statsCard";
 import TimelineCard from "@/components/UI/timelineCard";
 import { dashboardLabReportTimelineItems, dashboardPrescriptionColumns, dashboardPrescriptionDataSource, dashboardUpcomingAppointmentColumns, dashboardUpcomingAppointmentDataSource } from "@/dummy-data/data";
@@ -14,6 +15,9 @@ interface Props {
 const UserDashBoard: React.FC<Props> = ({ account }) => {
     return (
         <div className="grid grid-cols-1 gap-y-1 lg:grid-cols-2 lg:gap-2 max-h-fit">
+            <div className="text-center w-full">
+                <ProfileInfoCard account={account} />
+            </div>
             <section className="grid grid-cols-2 gap-2 shadow">
                 <StatsCard cardTitle="Age" statsTitle={`${dayjs(dayjs().diff(dayjs(account?.updatedAt))).day()} Days Ago`} value={String(account?.age)} suffix="year" />
                 <StatsCard cardTitle="Weight" statsTitle={`${dayjs(dayjs().diff(dayjs(account?.updatedAt))).day()} Days Ago`} value={String(account?.weight)} suffix="kg" />

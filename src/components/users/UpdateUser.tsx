@@ -2,7 +2,7 @@
 
 import axiosInstance from "@/api/axiostInstance";
 import Account from "@/api/entities/account.entity";
-import { updateAccountWithToken } from "@/api/services/account.service";
+import { updateAccountWithId } from "@/api/services/account.service";
 import { PlusOutlined } from "@ant-design/icons";
 import { App, Button, DatePicker, Divider, Form, Image, Input, InputNumber, Modal, Upload, UploadFile } from "antd";
 import dayjs from "dayjs";
@@ -13,7 +13,7 @@ interface Props {
     account: Account | null;
 }
 
-const MyDetails: React.FC<Props> = ({ account }) => {
+const UpdateUser: React.FC<Props> = ({ account }) => {
     const [form] = Form.useForm();
     const { notification } = App.useApp();
     const [previewVisible, setPreviewVisible] = useState(false);
@@ -29,6 +29,10 @@ const MyDetails: React.FC<Props> = ({ account }) => {
             }] : []);
 
     const onSubmitForm = async () => {
+        if(!account?.id){
+            notification.error({ message: "Account settings update error!", closable: true, placement: "top" });
+            return;
+        }
         const data: Partial<Account> = {
             birthDate: form.getFieldValue("birthDate"),
             email: form.getFieldValue("email"),
@@ -38,7 +42,7 @@ const MyDetails: React.FC<Props> = ({ account }) => {
             weight: form.getFieldValue("weight"),
             phone: form.getFieldValue("phone")
         };
-        const response = await updateAccountWithToken(data);
+        const response = await updateAccountWithId(data, account?.id);
         if (response) {
             notification.success({ message: "Account settings successfully updated!", closable: true, placement: "top" });
             account = response;
@@ -55,7 +59,7 @@ const MyDetails: React.FC<Props> = ({ account }) => {
             setFileList([]);
             setPreviewImage('');
             notification.success({ message: "Photo deleting successfully!", closable: true, placement: "top" });
-        }else{
+        } else {
             notification.error({ message: "Photo deleting error!", closable: true, placement: "top" });
         }
     };
@@ -234,4 +238,4 @@ const MyDetails: React.FC<Props> = ({ account }) => {
     );
 }
 
-export default MyDetails;
+export default UpdateUser;

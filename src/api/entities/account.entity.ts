@@ -6,6 +6,7 @@ export default interface Account {
     firstName: string;
     lastName: string;
     phone: string;
+    password?: string;
     birthDate: Date;
     age: number;
     weight: number;
@@ -14,4 +15,38 @@ export default interface Account {
     photo: string;
     createdAt: Date;
     updatedAt: Date;
+}
+
+interface Pageable {
+    pageNumber: number;
+    pageSize: number;
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+    sort: Sort;
+}
+
+
+enum Direction {
+    ASC,
+    DESC
+}
+
+interface Sort {
+    direction: Direction;
+    property: string;
+    ignoreCase: boolean;
+    nullHandling: string;
+    ascending: boolean;
+    descending: boolean;
+}
+
+export interface PageableAccount {
+    content: Account[]
+    pageable: Pageable;
+    sort: Sort;
+    totalElements: number;
+    totalPages: number;
+    size: number;
+    number: number;
 }
