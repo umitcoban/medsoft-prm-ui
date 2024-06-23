@@ -81,3 +81,13 @@ export const updateAccountRole = async (ids: number[], id: string): Promise<bool
         return null;
     }
 }
+
+export const updateAccountPassword = async (id: string, password: string): Promise<boolean | null> => {
+    try {
+        const response = await axiosInstance.post(`/accounts/api/${id}/changePassword`, { password });
+        return response.data.data;
+    } catch (error) {
+        console.log("getAccountWithToken error");
+        return null;
+    }
+}
