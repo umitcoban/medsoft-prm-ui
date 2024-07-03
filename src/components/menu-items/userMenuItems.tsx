@@ -5,6 +5,7 @@ import { Menu, MenuProps } from "antd";
 import { useRouter } from "next/navigation";
 import { BsCalendarDate } from "react-icons/bs";
 import { FaPeopleGroup } from "react-icons/fa6";
+import { LiaHospital } from "react-icons/lia";
 import { MdOutlineDashboard } from "react-icons/md";
 
 interface Props {
@@ -66,6 +67,24 @@ const UserMenuItems: React.FC<Props> = ({ account }) => {
                         key: "4.2",
                         label: "New User",
                         onClick: () => router.push("/dashboard/users/new-user")
+                    }
+                ],
+                disabled: isDoctor || isUser
+            },
+            {
+                key: '5',
+                icon: <LiaHospital />,
+                label: 'Departments',
+                children: [
+                    {
+                        key: "5.1",
+                        label: "Departments",
+                        onClick: () => router.push(`/dashboard/departments`)
+                    },
+                    {
+                        key: "5.2",
+                        label: "New Department",
+                        onClick: () => router.push("/dashboard/departments/new-department")
                     }
                 ],
                 disabled: isDoctor || isUser

@@ -1,7 +1,9 @@
 "use client"
 import Account, { PageableAccount } from "@/api/entities/account.entity";
+import Department from "@/api/entities/department.entity";
 import Role from "@/api/entities/role.entity";
-import { getPageableAccountsWithToken, updateAccountRole } from "@/api/services/account.service";
+import { getPageableAccountsWithToken, updateAccountDepartment, updateAccountRole } from "@/api/services/account.service";
+import { getDepartments } from "@/api/services/department.service";
 import { getAllRoles } from "@/api/services/roles.service";
 import { Avatar, message, Result, Select, Table, TableColumnsType } from "antd";
 import Link from "next/link";
@@ -10,6 +12,7 @@ import React, { useEffect, useState } from 'react';
 const UsersTable: React.FC = () => {
     const [pageableAccounts, setPageableAccounts] = useState<PageableAccount | null>(null);
     const [roles, setRoles] = useState<Role[] | null>([]);
+    const [departments, setDepartments] = useState<Department[] | null>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -19,6 +22,9 @@ const UsersTable: React.FC = () => {
                 setPageableAccounts(pageableAccount);
                 const responseRoles = await getAllRoles();
                 setRoles(responseRoles);
+                const responseDepartments = await getDepartments();
+                setDepartments(responseDepartments);
+
             } catch (error) {
                 console.error("Error fetching accounts:", error);
                 setPageableAccounts(null);
@@ -46,6 +52,18 @@ const UsersTable: React.FC = () => {
                 message.success({ type: "success", content: "Roles updated successfully" });
             else
                 message.error({ type: "error", content: "Failed to update roles" });
+        }
+    };
+
+    const handleDepartmentSelect = async (ids: number[], userId: string) => {
+        if (ids.length === 0)
+            message.error({ type: "error", content: "Departments must be not empty" })
+        else {
+            const response = await updateAccountDepartment(ids[0], userId);
+            if (response)
+                message.success({ type: "success", content: "Departments updated successfully" });
+            else
+                message.error({ type: "error", content: "Failed to update departments" });
         }
     };
 
@@ -85,6 +103,20 @@ const UsersTable: React.FC = () => {
                     onChange={(value: number[]) => handleRoleSelect(value, record.id)}
                     mode="multiple" />
             },
+        },
+        {
+            title: 'Departments',
+            dataIndex: 'departments',
+            render(value, record, index) {
+                return <Select
+                    key={index}
+                    className="w-full"
+                    size="large"
+                    options={departments?.map(department => { return { value: department.id, label: department.description } })}
+                    defaultValue={record.departments?.map(department => department.id)}
+                    onChange={(value: number[]) => handleDepartmentSelect(value, record.id)}
+                    mode="multiple" />
+            }
         },
         {
             title: 'Actions',

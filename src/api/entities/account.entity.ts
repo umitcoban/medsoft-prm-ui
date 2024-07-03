@@ -1,3 +1,4 @@
+import Department from "./department.entity";
 import Role from "./role.entity";
 
 export default interface Account {
@@ -13,6 +14,7 @@ export default interface Account {
     height: number;
     roles: Role[];
     photo: string;
+    departments: Department[];
     createdAt: Date;
     updatedAt: Date;
 }

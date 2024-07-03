@@ -61,7 +61,7 @@ const PrimaryAppLayout = ({ children, account }: PrimaryAppLayoutProps) => {
                             <div className='flex flex-grow justify-end align-middle mx-auto me-12 gap-6'>
                                 <div className='flex items-center align-middle gap-12'>
                                     <Popover content={<MenuBarContent account={account} />}>
-                                        <Avatar size={50} src={"data:image/png;base64," + account?.photo}>{account ? account.firstName.substring(0, 1).toUpperCase() : "A"}</Avatar>
+                                        <Avatar size={50} src={"data:image/png;base64," + account?.photo}>{}</Avatar>
                                     </Popover>
                                 </div>
                             </div>
