@@ -108,7 +108,7 @@ const UsersTable: React.FC = () => {
             title: 'Departments',
             dataIndex: 'departments',
             render(value, record, index) {
-                return <Select
+                return record.roles.find((role) => role.role.includes("DOCTOR")) && <Select
                     key={index}
                     className="w-full"
                     size="large"

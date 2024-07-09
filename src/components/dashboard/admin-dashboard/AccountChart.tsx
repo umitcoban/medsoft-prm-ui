@@ -1,32 +1,8 @@
-// components/AccountChart.tsx
 "use client"
-
-import {
-    ArcElement,
-    BarElement,
-    CategoryScale,
-    Chart as ChartJS,
-    Legend,
-    LinearScale,
-    TimeScale,
-    Title,
-    Tooltip
-} from 'chart.js';
-import 'chartjs-adapter-date-fns';
+import { ResponsiveBar } from '@nivo/bar';
+import { ResponsivePie } from '@nivo/pie';
 import dayjs from 'dayjs';
-import { FC } from 'react';
-import { Bar, Pie } from 'react-chartjs-2';
-
-ChartJS.register(
-    ArcElement,
-    BarElement,
-    CategoryScale,
-    LinearScale,
-    Title,
-    Tooltip,
-    Legend,
-    TimeScale
-);
+import React from 'react';
 
 interface AccountChartProps {
     data: AccountAnalytic | null;
@@ -34,83 +10,82 @@ interface AccountChartProps {
     chartDataKey: 'date' | 'role';
 }
 
-const AccountChart: FC<AccountChartProps> = ({ data, chartType, chartDataKey }) => {
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
+const AccountChart: React.FC<AccountChartProps> = ({ data, chartType = 'bar', chartDataKey = 'date' }) => {
     if (!data) return <p>No Data</p>;
 
-    let chartData;
+    let chartData: any[] = [];
+
     if (chartDataKey === 'date') {
-        const labels = data.accountsCountWithDate.map(item => item.second ? dayjs(item.second).format("DD/MM/YYYY") : "");
-        const counts = data.accountsCountWithDate.map(item => item.first || 0);
-
-        chartData = {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'User Count Over Time',
-                    data: counts,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                }
-            ],
-        };
+        chartData = data.accountsCountWithDate.map(item => ({
+            date: item.second ? dayjs(item.second).format("DD/MM/YYYY") : "",
+            count: item.first || 0
+        }));
     } else if (chartDataKey === 'role') {
-        const labels = ['Users', 'Admins', 'Doctors'];
-        const counts = [data.accountsCount.user_count, data.accountsCount.admin_count, data.accountsCount.doctor_count];
-
-        chartData = {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'Role Based Counts',
-                    data: counts,
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                    ],
-                    borderColor: [
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                    ],
-                    borderWidth: 1,
-                }
-            ],
-        };
+        chartData = [
+            { id: 'Users', label: 'Users', value: data.accountsCount.user_count || 0 },
+            { id: 'Admins', label: 'Admins', value: data.accountsCount.admin_count || 0 },
+            { id: 'Doctors', label: 'Doctors', value: data.accountsCount.doctor_count || 0 }
+        ];
     }
 
-    const options = chartDataKey === 'date' ? {
-        scales: {
-            x: {
-                type: 'time' as const,
-                time: {
-                    unit: 'month' as const,
-                },
-            },
-            y: {
-                beginAtZero: true,
-            }
-        },
-    } : {
-        scales: {
-            y: {
-                beginAtZero: true,
-            }
-        }
-    };
-
-    if (!chartData) return <p>No Chart Data</p>;
+    if (!chartData.length) return <p>No Chart Data</p>;
 
     return (
-        <>
+        <div style={{ height: 400 }}>
             {chartType === 'pie' ? (
-                <Pie data={chartData} />
+                <ResponsivePie
+                    data={chartData}
+                    margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+                    innerRadius={0.5}
+                    padAngle={0.7}
+                    cornerRadius={3}
+                    colors={{ scheme: 'nivo' }}
+                    borderWidth={1}
+                    borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
+                    arcLabelsSkipAngle={10}
+                    arcLabelsTextColor="#333333"
+                    arcLinkLabelsSkipAngle={10}
+                    arcLinkLabelsTextColor="#333333"
+                    arcLinkLabelsThickness={2}
+                    arcLinkLabelsColor={{ from: 'color' }}
+                />
             ) : (
-                <Bar data={chartData} options={options} style={{height: "100%"}} />
+                <ResponsiveBar
+                    data={chartData}
+                    keys={['count']}
+                    indexBy="date"
+                    margin={{ top: 50, right: 50, bottom: 50, left: 60 }}
+                    padding={0.3}
+                    colors={{ scheme: 'nivo' }}
+                    borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+                    axisTop={null}
+                    axisRight={null}
+                    axisBottom={{
+                        tickSize: 5,
+                        tickPadding: 5,
+                        tickRotation: 0,
+                        legend: 'Date',
+                        legendPosition: 'middle',
+                        legendOffset: 32
+                    }}
+                    axisLeft={{
+                        tickSize: 5,
+                        tickPadding: 5,
+                        tickRotation: 0,
+                        legend: 'Count',
+                        legendPosition: 'middle',
+                        legendOffset: -40
+                    }}
+                    labelSkipWidth={12}
+                    labelSkipHeight={12}
+                    labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+                    animate={true}
+                    motionConfig="wobbly"
+                />
             )}
-        </>
+        </div>
     );
 };
 

@@ -6,7 +6,7 @@ interface Props {
 }
 
 
-const ProfileInfoCard: React.FC<Props> = async ({ account }) => {
+const ProfileInfoCard: React.FC<Props> = ({ account }) => {
 
     const roles = account?.roles.map((role) => role.role).join(",");
 

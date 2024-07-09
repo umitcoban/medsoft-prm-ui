@@ -16,7 +16,7 @@ const UserMenuItems: React.FC<Props> = ({ account }) => {
     const router = useRouter();
     const isAdmin = account?.roles.some(role => role.role === "ADMIN");
     const isDoctor = !isAdmin && account?.roles.some(role => role.role === "DOCTOR");
-    const isUser = !isAdmin && isDoctor && account?.roles.some(role => role.role === "USER");
+    const isUser = !isAdmin && !isDoctor && account?.roles.some(role => role.role === "USER");
 
     let sideBarItems: MenuProps["items"] = []
 
@@ -41,15 +41,13 @@ const UserMenuItems: React.FC<Props> = ({ account }) => {
                 children: [
                     {
                         key: "3.1",
-                        label: "Active Appointments"
+                        label: "Appointments",
+                        onClick: () => router.push("/dashboard/appointments")
                     },
                     {
                         key: "3.2",
-                        label: "Past Appointments"
-                    },
-                    {
-                        key: "3.3",
-                        label: "Canceled Appointments"
+                        label: "New Appointments",
+                        onClick: () => router.push("/dashboard/appointments/new-appointment")
                     }
                 ]
             },

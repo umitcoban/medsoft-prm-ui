@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -24,4 +23,26 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+
+.card {
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+  box-shadow: 5px 5px 10px #d9d9d9, -5px -5px 10px #ffffff;
+  border-radius: 15px;
+  padding: 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 15px 15px 30px #d9d9d9, -15px -15px 30px #ffffff;
+}
+
+.grid-item {
+  transition: all 0.2s ease;
+}
+
+.grid-item.moving {
+  background: rgba(0, 0, 0, 0.1);
+  border: 2px dashed #000;
 }

@@ -2,6 +2,16 @@ import axiosInstance from "../axiostInstance";
 import Account, { PageableAccount } from "../entities/account.entity";
 
 
+export const getAccounts= async (): Promise<Account[] | null> => {
+    try {
+        const response = await axiosInstance.get("/accounts/api");
+        return response.data.data;
+    } catch (error) {
+        console.log("getAccountWithToken error");
+        return null;
+    }
+}
+
 export const getAccountWithToken = async (): Promise<Account | null> => {
     try {
         const response = await axiosInstance.get("/accounts/api/myAccount");

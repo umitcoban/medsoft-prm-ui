@@ -1,6 +1,8 @@
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
