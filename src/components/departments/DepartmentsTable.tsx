@@ -50,8 +50,7 @@ const DepartmentsTable: React.FC = () => {
             render(value, record, index) {
                 return (
                     <div className="flex space-x-2">
-                        <Link href={`/dashboard/users/${record.id}`}>Update</Link>
-                        <Link href={`/dashboard/user-profile/${record.id}/settings`}>Change Password</Link>
+                        <Link href={`/dashboard/departments/${record.id}`}>Update</Link>
                     </div>
                 );
             },

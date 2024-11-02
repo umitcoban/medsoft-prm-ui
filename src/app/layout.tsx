@@ -1,4 +1,5 @@
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { App } from "antd";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import 'react-grid-layout/css/styles.css';
@@ -21,7 +22,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AntdRegistry>
+          <App>
             {children}
+          </App>
         </AntdRegistry>
       </body>
     </html>

@@ -16,12 +16,19 @@ const config: Config = {
       colors: {
         "primary-bg-color": "#E3F2FD",
       },
+      backgroundColor: {
+        "light": "#f0f8ff"
+      },
       textColor: {
         "primary-text-color": "#424242",
-        "primary-header-color": "#0D47A1",
+        "primary-header-color": "#0056b3",
         "primary-link-color": "#757575",
         "primary-warning-color": "#FFEB3B",
         "primary-btn-color": "#4CAF50",
+        "paragraph-color": "##333"
+      },
+      fontFamily: {
+
       }
     },
   },

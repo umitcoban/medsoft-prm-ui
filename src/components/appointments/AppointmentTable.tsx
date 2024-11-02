@@ -40,7 +40,7 @@ const columns: ColumnsType<Appointment> = [
         title: 'Department',
         dataIndex: 'department',
         key: 'department',
-        render: (department: Department) => department.name,
+        render: (department: Department) => department ? department.name : "NO DEPARTMENT",
     },
     {
         title: 'Status',

@@ -1,20 +1,20 @@
 import axiosInstance from "../axiostInstance";
-import Appointment from "../entities/appointment.entity";
-import Department from "../entities/department.entity";
+import Appointment, { AppointmentCreateDTO } from "../entities/appointment.entity";
 
 export const getAppointments = async (): Promise<Appointment[]> => {
     try {
         const response = await axiosInstance.get(`/appointments/api`);
+        console.log(response.data.data)
         return response.data.data;
     } catch (error) {
-        console.log("getAccountWithToken error");
+        console.log("getAccountWithToken error", error);
         return [];
     }
 }
 
-export const createDepartment = async (department: Partial<Department>): Promise<String | null> => {
+export const createAppointment = async (department: AppointmentCreateDTO): Promise<String | null> => {
     try {
-        const response = await axiosInstance.post(`/departments/api`, {...department});
+        const response = await axiosInstance.post(`/appointments/api`, {...department});
         return response.data.data;
     } catch (error) {
         console.log(error);

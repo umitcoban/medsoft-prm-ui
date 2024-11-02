@@ -5,12 +5,14 @@ import Role from "@/api/entities/role.entity";
 import { getPageableAccountsWithToken, updateAccountDepartment, updateAccountRole } from "@/api/services/account.service";
 import { getDepartments } from "@/api/services/department.service";
 import { getAllRoles } from "@/api/services/roles.service";
-import { Avatar, message, Result, Select, Table, TableColumnsType } from "antd";
+import { Avatar, message, Select, Table, TableColumnsType, TablePaginationConfig } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from 'react';
 
 const UsersTable: React.FC = () => {
     const [pageableAccounts, setPageableAccounts] = useState<PageableAccount | null>(null);
+    const [page, setPage] = useState<number>(0);
+    const [size, setSize] = useState<number>(10);
     const [roles, setRoles] = useState<Role[] | null>([]);
     const [departments, setDepartments] = useState<Department[] | null>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -18,13 +20,13 @@ const UsersTable: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const pageableAccount = await getPageableAccountsWithToken();
+                setLoading(true);
+                const pageableAccount = await getPageableAccountsWithToken(page, size);
                 setPageableAccounts(pageableAccount);
                 const responseRoles = await getAllRoles();
                 setRoles(responseRoles);
                 const responseDepartments = await getDepartments();
                 setDepartments(responseDepartments);
-
             } catch (error) {
                 console.error("Error fetching accounts:", error);
                 setPageableAccounts(null);
@@ -33,23 +35,18 @@ const UsersTable: React.FC = () => {
             }
         };
         fetchData();
-    }, []);
-
-    if (loading) {
-        return <Result className="animate-pulse" status={"info"} title="Loading..." />;
-    }
-
-    if (!pageableAccounts) {
-        return <Result status={"404"} title="Not Found" />;
-    }
+    }, [size, page]);
 
     const handleRoleSelect = async (ids: number[], userId: string) => {
         if (ids.length === 0)
             message.error({ type: "error", content: "Roles must be not empty" })
         else {
             const response = await updateAccountRole(ids, userId);
-            if (response)
+            if (response){
                 message.success({ type: "success", content: "Roles updated successfully" });
+                const accounts = await getPageableAccountsWithToken(page, size);
+                setPageableAccounts(accounts);
+            }
             else
                 message.error({ type: "error", content: "Failed to update roles" });
         }
@@ -134,13 +131,19 @@ const UsersTable: React.FC = () => {
 
     return (
         <Table
-            dataSource={pageableAccounts.content}
+            dataSource={pageableAccounts?.content}
             columns={columns}
             rowKey="id"
+            loading={loading}
             pagination={{
-                pageSize: pageableAccounts.size,
-                current: pageableAccounts.number + 1,
-                total: pageableAccounts.totalElements,
+                pageSize: pageableAccounts?.size,
+                current: pageableAccounts?.number ? pageableAccounts?.number + 1 : 0,
+                total: pageableAccounts?.totalElements,
+            }}
+            onChange={(pagination: TablePaginationConfig) => {
+                const { current, pageSize, size } = pagination;
+                setPage(current ? current - 1 : 0);
+                setSize(pageSize ? pageSize : 10);
             }}
         />
     );

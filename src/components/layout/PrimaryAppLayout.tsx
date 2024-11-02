@@ -7,11 +7,12 @@ import {
     MenuUnfoldOutlined
 } from '@ant-design/icons';
 import { App, Avatar, Button, Divider, Layout, Popover, theme } from 'antd';
+import dayjs from 'dayjs';
 import Image from 'next/image';
 import { ReactNode, useEffect, useState } from 'react';
 import MenuBarContent from '../UI/MenuBarContent';
 import UserMenuItems from '../menu-items/userMenuItems';
-const { Header, Sider, Content } = Layout;
+const { Header, Sider, Content, Footer } = Layout;
 
 interface PrimaryAppLayoutProps {
     children: ReactNode;
@@ -35,8 +36,8 @@ const PrimaryAppLayout = ({ children, account }: PrimaryAppLayoutProps) => {
 
     return (
         <App>
-            <Layout className='h-screen w-screen !bg-primary-bg-color'>
-                <Sider trigger={null} collapsible collapsed={collapsed} className='!bg-primary-bg-color' width={225}>
+            <Layout className='h-screen w-screen !bg-light font-serif'>
+                <Sider trigger={null} collapsible collapsed={collapsed} className='!bg-light' width={225}>
                     <div className="text-center justify-center items-center mx-auto">
                         <Image src={"/assets/logo/logo.png"} alt='MedSoft Logo' width={500} height={100} className='w-full' />
                     </div>
@@ -61,7 +62,7 @@ const PrimaryAppLayout = ({ children, account }: PrimaryAppLayoutProps) => {
                             <div className='flex flex-grow justify-end align-middle mx-auto me-12 gap-6'>
                                 <div className='flex items-center align-middle gap-12'>
                                     <Popover content={<MenuBarContent account={account} />}>
-                                        <Avatar size={50} src={"data:image/png;base64," + account?.photo}>{}</Avatar>
+                                        <Avatar size={50} src={"data:image/png;base64," + account?.photo}>{ }</Avatar>
                                     </Popover>
                                 </div>
                             </div>
@@ -79,6 +80,9 @@ const PrimaryAppLayout = ({ children, account }: PrimaryAppLayoutProps) => {
                     >
                         {children}
                     </Content>
+                    <Footer className='text-center'>
+                        MedSoft {dayjs().year()} © Ümit Yasin Çoban
+                    </Footer>
                 </Layout>
             </Layout>
         </App>

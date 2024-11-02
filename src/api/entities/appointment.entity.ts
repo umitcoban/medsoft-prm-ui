@@ -17,3 +17,11 @@ export default interface Appointment{
     status: AppointmentStatusEnum;
     department: Department;
 }
+
+export interface AppointmentCreateDTO{
+    patientId: string;
+    doctorId: string;
+    date: Date;
+    time: string;
+    departmentId: number;    
+}

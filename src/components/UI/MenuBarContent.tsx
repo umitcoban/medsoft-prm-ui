@@ -1,5 +1,6 @@
 "use client"
 import Account from "@/api/entities/account.entity";
+import { logoutAccountWithToken } from "@/api/services/account.service";
 import { LogoutOutlined } from "@ant-design/icons";
 import { Button, Divider } from "antd";
 import { signOut } from "next-auth/react";
@@ -23,7 +24,10 @@ const MenuBarContent: React.FC<Props> = ({ account }: Props) => {
             </div>
             <Divider />
             <div className="w-full text-center">
-                <Button icon={<LogoutOutlined />} type="primary" onClick={() => signOut({ redirect: true, callbackUrl: "/sign-in" })}>Logout</Button>
+                <Button icon={<LogoutOutlined />} type="primary" onClick={async () => {
+                    await logoutAccountWithToken();
+                    signOut({ redirect: true, callbackUrl: "/sign-in" });
+                    }}>Logout</Button>
             </div>
 
         </div>

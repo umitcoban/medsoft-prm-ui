@@ -47,7 +47,7 @@ const UserSettings: React.FC<Props> = ({ account }) => {
                 <section id="communication-property">
                     <div className="grid grid-cols-1 gap-4">
                         <div className="grid-flow-col">
-                            <h2 className="text-primary-header-color text-2xl font-extrabold">Communication: </h2>
+                            <h2 className="text-primary-header-color text-2xl font-extrabold">Security: </h2>
                         </div>
                         <div className="grid-flow-col">
                             <div className="grid grid-cols-1 gap-2 text-center">
